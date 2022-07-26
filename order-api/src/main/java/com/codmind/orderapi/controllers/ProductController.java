@@ -22,6 +22,7 @@ import com.codmind.orderapi.converter.ProductConverter;
 import com.codmind.orderapi.dtos.ProductDto;
 import com.codmind.orderapi.entity.Product;
 import com.codmind.orderapi.services.ProductService;
+import com.codmind.orderapi.utils.WrapperResponse;
 
 @RestController
 public class ProductController {
@@ -31,18 +32,21 @@ public class ProductController {
 	private ProductService productService;
 	
 	@GetMapping(value = "/products/{id}")
-	public ResponseEntity<ProductDto> findById(@PathVariable Long id) {
+	public ResponseEntity<WrapperResponse<ProductDto>> findById(@PathVariable Long id) {
 		Product product = productService.findById(id);
 		
 		ProductDto productDto = productConverter.fromEntity(product);
-		return new ResponseEntity<ProductDto>(productDto, HttpStatus.OK);
+		return new WrapperResponse<ProductDto>(true, "succes", productDto)
+				.createResponse(HttpStatus.OK);
 		
 	}
 	
 	@DeleteMapping(value = "/products/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Long id) {
+	public ResponseEntity<?> delete(@PathVariable Long id) {
 		productService.delete(id);
-		return new ResponseEntity<Void>( HttpStatus.OK);
+		return new WrapperResponse(true, "succes", null)
+				.createResponse(HttpStatus.OK);
+		
 		
 	}
 	
@@ -56,7 +60,8 @@ public class ProductController {
 		List<Product> products = productService.products(pageable);
 		
 		List<ProductDto> dtoProducts =  productConverter.fromEntity(products);
-		return new ResponseEntity <List<ProductDto>>(dtoProducts, HttpStatus.OK);
+		return new WrapperResponse(true, "succes", dtoProducts)
+				.createResponse(HttpStatus.OK);
 		
 	}
 	
@@ -65,8 +70,9 @@ public class ProductController {
 		Product newProduct = productService.save(productConverter.fromDto(productD));
 		
 		ProductDto productDto = productConverter.fromEntity(newProduct);
+		return new WrapperResponse(true, "succes", productDto)
+				.createResponse(HttpStatus.CREATED);
 		
-		return new ResponseEntity <ProductDto>(productDto, HttpStatus.CREATED);
 		
 	}
 	
@@ -74,7 +80,9 @@ public class ProductController {
 	public ResponseEntity <ProductDto> update(@RequestBody ProductDto productD){
 		Product updateProduct = productService.save(productConverter.fromDto(productD));
 		ProductDto productDto = productConverter.fromEntity(updateProduct);
-		return new ResponseEntity <ProductDto>(productDto, HttpStatus.CREATED);
+		return new WrapperResponse(true, "succes", productDto)
+				.createResponse(HttpStatus.OK);
+		
 		
 	}
 	
