@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.codmind.orderapi.entity.OrderLine;
+import com.codmind.orderapi.entity.Product;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
